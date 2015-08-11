@@ -5,9 +5,11 @@ import ConfigParser
 import numpy as np
 import random
 import codecs
+import os
 
 from collections import OrderedDict
-
+#获取当前路径
+path = os.getcwd()
 #导入日志配置文件
 logging.config.fileConfig("logging.conf")
 #创建日志对象
@@ -18,13 +20,13 @@ Consolelogger = logging.getLogger("ConsoleLogger")
 conf = ConfigParser.ConfigParser()
 conf.read("setting.conf") 
 #文件路径
-trainfile = conf.get("filepath", "trainfile")
-wordidmapfile = conf.get("filepath","wordidmapfile")
-thetafile = conf.get("filepath","thetafile")
-phifile = conf.get("filepath","phifile")
-paramfile = conf.get("filepath","paramfile")
-topNfile = conf.get("filepath","topNfile")
-tassginfile = conf.get("filepath","tassginfile")
+trainfile = os.path.join(path,os.path.normpath(conf.get("filepath", "trainfile")))
+wordidmapfile = os.path.join(path,os.path.normpath(conf.get("filepath","wordidmapfile")))
+thetafile = os.path.join(path,os.path.normpath(conf.get("filepath","thetafile")))
+phifile = os.path.join(path,os.path.normpath(conf.get("filepath","phifile")))
+paramfile = os.path.join(path,os.path.normpath(conf.get("filepath","paramfile")))
+topNfile = os.path.join(path,os.path.normpath(conf.get("filepath","topNfile")))
+tassginfile = os.path.join(path,os.path.normpath(conf.get("filepath","tassginfile")))
 #模型初始参数
 K = int(conf.get("model_args","K"))
 alpha = float(conf.get("model_args","alpha"))

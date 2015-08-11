@@ -13,8 +13,9 @@ path = os.getcwd()
 #导入日志配置文件
 logging.config.fileConfig("logging.conf")
 #创建日志对象
-loggerInfo = logging.getLogger("TimeInfoLogger")
-Consolelogger = logging.getLogger("ConsoleLogger")
+logger = logging.getLogger()
+# loggerInfo = logging.getLogger("TimeInfoLogger")
+# Consolelogger = logging.getLogger("ConsoleLogger")
 
 #导入配置文件
 conf = ConfigParser.ConfigParser()
@@ -136,19 +137,18 @@ class LDAModel(object):
 
         return topic
     def est(self):
-        Consolelogger.info(u"迭代次数为%s 次" % self.iter_times)
+        # Consolelogger.info(u"迭代次数为%s 次" % self.iter_times)
         for x in xrange(self.iter_times):
             for i in xrange(self.dpre.docs_count):
                 for j in xrange(self.dpre.docs[i].length):
                     topic = self.sampling(i,j)
                     self.Z[i][j] = topic
-        Consolelogger.info(u"迭代完成。")
-        Consolelogger.debug(u"计算文章-主题分布")
+        logger.info(u"迭代完成。")
+        logger.debug(u"计算文章-主题分布")
         self._theta()
-        Consolelogger.debug(u"计算词-主题分布")
+        logger.debug(u"计算词-主题分布")
         self._phi()
-        Consolelogger.debug(u"保存模型")
-        loggerInfo.debug(u"保存模型")
+        logger.debug(u"保存模型")
         self.save()
     def _theta(self):
         for i in xrange(self.dpre.docs_count):
@@ -158,24 +158,21 @@ class LDAModel(object):
             self.phi[i] = (self.nw.T[i] + self.beta)/(self.nwsum[i]+self.dpre.words_count * self.beta)
     def save(self):
         #保存theta文章-主题分布
-        Consolelogger.info(u"文章-主题分布已保存到%s" % self.thetafile)
-        loggerInfo.info(u"文章-主题分布已保存到%s" % self.thetafile)
+        logger.info(u"文章-主题分布已保存到%s" % self.thetafile)
         with codecs.open(self.thetafile,'w') as f:
             for x in xrange(self.dpre.docs_count):
                 for y in xrange(self.K):
                     f.write(str(self.theta[x][y]) + '\t')
                 f.write('\n')
         #保存phi词-主题分布
-        Consolelogger.info(u"词-主题分布已保存到%s" % self.phifile)
-        loggerInfo.info(u"词-主题分布已保存到%s" % self.phifile)
+        logger.info(u"词-主题分布已保存到%s" % self.phifile)
         with codecs.open(self.phifile,'w') as f:
             for x in xrange(self.K):
                 for y in xrange(self.dpre.words_count):
                     f.write(str(self.phi[x][y]) + '\t')
                 f.write('\n')
         #保存参数设置
-        Consolelogger.info(u"参数设置已保存到%s" % self.paramfile)
-        loggerInfo.info(u"参数设置已保存到%s" % self.paramfile)
+        logger.info(u"参数设置已保存到%s" % self.paramfile)
         with codecs.open(self.paramfile,'w','utf-8') as f:
             f.write('K=' + str(self.K) + '\n')
             f.write('alpha=' + str(self.alpha) + '\n')
@@ -183,8 +180,7 @@ class LDAModel(object):
             f.write(u'迭代次数  iter_times=' + str(self.iter_times) + '\n')
             f.write(u'每个类的高频词显示个数  top_words_num=' + str(self.top_words_num) + '\n')
         #保存每个主题topic的词
-        Consolelogger.info(u"主题topN词已保存到%s" % self.topNfile)
-        loggerInfo.info(u"主题topN词已保存到%s" % self.topNfile)
+        logger.info(u"主题topN词已保存到%s" % self.topNfile)
 
         with codecs.open(self.topNfile,'w','utf-8') as f:
             self.top_words_num = min(self.top_words_num,self.dpre.words_count)
@@ -197,15 +193,13 @@ class LDAModel(object):
                     word = OrderedDict({value:key for key, value in self.dpre.word2id.items()})[twords[y][0]]
                     f.write('\t'*2+ word +'\t' + str(twords[y][1])+ '\n')
         #保存最后退出时，文章的词分派的主题的结果
-        Consolelogger.info(u"文章-词-主题分派结果已保存到%s" % self.tassginfile)
-        loggerInfo.info(u"文章-词-主题分派结果已保存到%s" % self.tassginfile)
+        logger.info(u"文章-词-主题分派结果已保存到%s" % self.tassginfile)
         with codecs.open(self.tassginfile,'w') as f:
             for x in xrange(self.dpre.docs_count):
                 for y in xrange(self.dpre.docs[x].length):
                     f.write(str(self.dpre.docs[x].words[y])+':'+str(self.Z[x][y])+ '\t')
                 f.write('\n')
-        Consolelogger.info(u"模型训练完成。")
-        loggerInfo.info(u"模型训练完成。")
+        logger.info(u"模型训练完成。")
 
 
 
@@ -213,11 +207,10 @@ class LDAModel(object):
 
 
 def preprocessing():
-    Consolelogger.debug(u"载入数据......")
-    loggerInfo.debug(u"载入数据......")
+    logger.info(u'载入数据......')
     with codecs.open(trainfile, 'r','utf-8') as f:
         docs = f.readlines()
-    Consolelogger.debug(u"载入完成,准备生成字典对象和统计文本数据...")
+    logger.debug(u"载入完成,准备生成字典对象和统计文本数据...")
     dpre = DataPreProcessing()
     items_idx = 0
     for line in docs:
@@ -238,11 +231,9 @@ def preprocessing():
             pass
     dpre.docs_count = len(dpre.docs)
     dpre.words_count = len(dpre.word2id)
-    Consolelogger.info(u"共有%s个文档" % dpre.docs_count)
-    Consolelogger.info(u"共有%s个词" % dpre.words_count)
+    logger.info(u"共有%s个文档" % dpre.docs_count)
     dpre.cachewordidmap()
-    Consolelogger.info(u"词与序号对应关系已保存到%s" % wordidmapfile)
-    loggerInfo.info(u"词与序号对应关系已保存到%s" % wordidmapfile)
+    logger.info(u"词与序号对应关系已保存到%s" % wordidmapfile)
     return dpre
 
 def run():

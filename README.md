@@ -15,12 +15,12 @@ python-LDA
 >4. 东城中心 乘坐 粤SM643M  东城 主山高田坊芳桂园 平时 行驶 路线 是 东城 中路 今天 司机 行驶 路线 是 东城大道 东纵大道 温南路 此 车 到了 温南路口车费 是  16元 认为 司机 绕路<br>
 
 #### 模型输出文件
->        `model_parameter.dat` 保存模型训练时选择的参数 <br>
->        `wordidmap.dat` 保存词与id的对应关系，主要用作topN时查询 <br>
->        `model_twords.dat` 输出每个类高频词topN个 <br>
->        `model_tassgin.dat` 输出文章中每个词分派的结果，文本格式为词id:类id <br>
->        `model_theta.dat` 输出文章与类的分布概率，文本一行表示一篇文章，概率1   概率2 ...表示文章属于类的概率 <br>
->        `model_phi.dat` 输出词与类的分布概率，是一个K*M的矩阵，其中K为设置分类的个数，M为所有文章的词的总数，<br>
+>        `model_parameter.dat` 保存模型训练时选择的参数 
+>        `wordidmap.dat` 保存词与id的对应关系，主要用作topN时查询 
+>        `model_twords.dat` 输出每个类高频词topN个 
+>        `model_tassgin.dat` 输出文章中每个词分派的结果，文本格式为词id:类id 
+>        `model_theta.dat` 输出文章与类的分布概率，文本一行表示一篇文章，概率1   概率2 ...表示文章属于类的概率 
+>        `model_phi.dat` 输出词与类的分布概率，是一个K*M的矩阵，其中K为设置分类的个数，M为所有文章的词的总数，
 
 ---
 ### 使用说明
